@@ -69,10 +69,18 @@ class guess:
             for x in range(len(guess.correct_word)):
                 if guess.correct_word[x] == user_guess:
                     guess.user_word[x] = user_guess
+                    print(guess.user_word)
 
+            if guess.correct_word == guess.user_word:
+                self.round_end_message(1)
+            else:
+                self.menu()
+                self.choose_option()
         else:
             # deduct score accordingly
             print("this letter is not contained in the word")
+            print("wrong guess, please try again")
+            self.char_guess()
 
     def round_end_message(self, status):
         if status == 1:
