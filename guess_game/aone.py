@@ -31,11 +31,11 @@ def game():
     print("game information")
 
 
-def stringDatabase():
+def stringDatabase(index):
     words = open("four_letters.txt", "r")
     contents = words.read().split()
 
-    return contents[0]
+    return contents(index)
 
 
 main()
