@@ -1,11 +1,18 @@
-# reponsible for all disk I/O. can add whatever code you think you need here.
-
-
 class string_database:
+    """
+    Encapsulates  a method required to create list from text File.
+    """
+
     def _init_(self):
-        print("this is my first constructor")
+        """
+        constructs a new string_database object.
+        """
 
     def get_word(self, index):
+        """
+        returns an item using a supplied index (random index) 
+        from a list curated from a provided textfile
+        """
         words = open("four_letters.txt", "r")
         contents = words.read().split()
 
@@ -13,4 +20,7 @@ class string_database:
 
 
 def get_db():
+    """
+    returns an instance of string_database
+    """
     return string_database()

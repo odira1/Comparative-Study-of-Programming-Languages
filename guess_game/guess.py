@@ -1,6 +1,3 @@
-# represents the game (including the menu)
-
-from importlib import reload
 import sys
 import random
 import string_database
@@ -10,8 +7,15 @@ import game
 class guess():
     """
     guess contains all data and object to ensure the that the game runs.
-    It uses both the game module and string_database module to create objects 
+    It uses both the game module and string_database module to create objects
     that are necessary for this game
+    :param games:                   Stores all created game objects.
+    :param total_score:             Keeps track of the total user score.
+    :param total_letter_guesses     No of time letters are guessed.
+    :param total_bad_guesses        No of bad guesses (for a char / string)
+    :param user_word                List of chars to be displayed.
+                                    contains char of correct letter guesses.
+    :param status                   Holds the status of the current game.
     """
     games = []
     total_score = 0
@@ -61,9 +65,6 @@ class guess():
         """
         self.correct_word = list(string_database.get_db().get_word(
             random.randint(0, 4029)))
-        self.correct_word = list("abed")
-        # print(self.correct_word)
-        # print(str(self.string_score()))
 
     def choose_option(self):
         """
@@ -92,6 +93,10 @@ class guess():
             self.choose_option()
 
     def string_guess(self):
+        """
+        Prompts user to guess a string. updates score accordingly
+        :param user_guess: Holds users letter guess.
+        """
         user_guess = input("enter a four letter word: ")
 
         if len(user_guess) > 4 or len(user_guess) < 4:
@@ -110,9 +115,14 @@ class guess():
             self.choose_option()
 
     def char_guess(self):
+        """
+        Prompts user to guess a letter. keeps count of total letter guess in
+        'total_letter_guesses' global variable
+        :param user_guess: Holds users letter guess.
+        """
         user_guess = input("enter a letter: \n")
 
-        if len(user_guess) > 1 or len(user_guess) < 1:
+        if len(user_guess) > 1 or not user_guess:
             print("please choose a one letter word, lets try that again")
             self.char_guess()
 
@@ -123,35 +133,47 @@ class guess():
                 if self.correct_word[x] == user_guess:
                     self.user_word[x] = user_guess
 
+            self.calc_score()
+
             if self.correct_word == self.user_word:
-                self.calc_score()
-                # print(self.calc_score())
                 self.status = "success"
                 self.round_end_message(1)
             else:
                 print(
-                    "you found " + str("".join(self.correct_word).count(user_guess)) + " letters")
-                self.menu()
-                self.choose_option()
+                    "you found " +
+                    str("".join(self.correct_word).count(user_guess))
+                    + " letters")
         else:
-            self.total_bad_guesses += 1
             print("this letter is not contained in the word!")
             self.menu()
             self.choose_option()
 
     def round_end_message(self, status):
-        # create game object
-        _game = game.game(len(self.games) + 1, "".join(self.correct_word), self.status,
-                          self.total_bad_guesses, self.total_letter_guesses, self.total_score)
+        """
+        Handles the creation of a new game object,
+        adds the 'games' global list for bookkeeping.
+        :param status:  values of 1 or other values for different
+                        prompts when user guesses right or gives
+                        up respectively.
+        """
+        uncovered_indices = [i for i, x in enumerate(
+            self.user_word) if x == "-"]
+
+        _game = game.game(len(self.games) + 1, "".join(self.correct_word),
+                          self.status, self.total_bad_guesses,
+                          len(uncovered_indices), self.total_score)
         self.games.append(_game)
 
         if status == 1:
             print("You guessed the right answer. it was truely " +
                   "".join(self.correct_word))
 
-        else:
+        elif status == 0:
             print("Dont give up next time.the right answer was " +
                   "".join(self.correct_word))
+        else:
+            self.menu()
+            self.choose_option()
 
     def uncovered_points(self):
         """
@@ -159,7 +181,7 @@ class guess():
         be uncovered.
         :param uncovered_indices:   Returns a list of indexes are that
                                     yet to be uncovered from the user_word.
-        :count:                     Accumulator to store the sum of frequencies
+        :param count:               Accumulator to store the sum of frequencies
                                     for uncovered letters.
         :return:                    returns the sum of the frequency of the
                                     uncovered word from local variable 'count'.
@@ -174,69 +196,99 @@ class guess():
         return count
 
     def calc_score(self):
-        ""'
-        
-        '""
+        """
+        Calculates the total score for the current game round.
+        Divides sum of frequency for uncovered letters by the
+        total letter guesses (only when sum > 0). Otherwise,
+        just return the sum of the frequencies.
+        :param wrong_guess_penalty():   updates score to reflect 10% deduction
+                                        for wrong guesses.
+        :param string_score():          calculate the score of the word to be
+                                        guessed.
+        """
         count = self.uncovered_points()
+
+        def string_score():
+            counter = 0
+            for x in range(len(self.correct_word)):
+                counter += self.letter_freq[self.correct_word[x]]
+            return counter
+
+        user_score = string_score() - count if string_score() != count else count
+
         if count > 0:
-            self.total_score = count / \
-                self.total_letter_guesses if self.total_letter_guesses > 0 else count
+            self.total_score = user_score / \
+                self.total_letter_guesses if self.total_letter_guesses > 0 else user_score
         else:
-            self.total_score = 0 - self.string_score()
+            self.total_score = 0 - string_score()
             self.total_score /= self.total_letter_guesses
 
-        # apply deduction for wrong guesses
         self.wrong_guess_penalty()
 
     def wrong_guess_penalty(self):
-        #print("bad guesses: " + str(self.total_bad_guesses))
+        """
+        Applies 10% score deduction based on number of bad guesses
+        """
         divisor = 0.10 * self.total_bad_guesses
         self.total_score -= self.total_score * divisor if divisor > 0 else 0
 
-    # function to reset global variables that may have changed
     def reset(self):
+        """
+        Resets global variables that may have changed but need to be
+        reinitialized for a new game object.
+        """
+
         self.user_word = ["-", "-", "-", "-"]
         self.total_score = 0
         self.total_letter_guesses = 0
         self.total_bad_guesses = 0
         self.status = "Gave up"
 
-    def string_score(self):
-        count = 0
-        for x in range(len(self.correct_word)):
-            count += self.letter_freq[self.correct_word[x]]
-        return count
-
     def print_game_stats(self):
+        """
+        Prints the game stats once the user quits as specified.
+        Also prints the cummulative score for all game rounds.
+        :param game_total:  local variable to hold the sum of
+                            scores of all game rounds.
+        """
+
         game_total = 0
         print(
-            "game    word    status      Bad Guesses     Missed letters      Score", end="")
+            "game  word  status   Bad Guesses   Missed letters   Score"
+            .replace("  ", "\t\t"))
         print(
-            "\n----    ----    ------      -----------     --------------      -----", end="")
+            "\n----  ----  ------   ----------   --------------   -----"
+            .replace("  ", "\t\t"))
         for game_round in self.games:
             game_total += game_round.get_score()
 
-            print("\n" + str(game_round.get_game_round()) +
-                  "\t" + str(game_round.get_word()) +
-                  "\t" + str(game_round.get_status()) +
+            print("\n\n" + str(game_round.get_game_round()) +
+                  "\t\t" + str(game_round.get_word()) +
+                  "\t\t " + str(game_round.get_status()) +
                   "\t\t" + str(game_round.get_bad_guesses()) +
-                  "\t\t" + str(game_round.get_missed_letters()) +
+                  "\t\t\t" + str(game_round.get_missed_letters()) +
                   "\t\t" + str("%0.2f" % game_round.get_score()))
         print("\n\n" + "Final Score: " + str("%0.2f" % game_total))
 
 
 def main():
+    """
+    Represents game Entry point.
+    Handles creation of new guess objects for the 100x.
+    """
 
     print("** The great guessing game ** ")
-
     for x in range(100):
         guess()
 
     print("you are a legend, you have finished the 100th round...")
-    # game_stats()
 
 
 def end_game():
+    """
+    Method to end program execution anywhere with the module
+    """
+
     sys.exit()
 
 
