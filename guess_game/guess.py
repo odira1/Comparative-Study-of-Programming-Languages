@@ -1,3 +1,8 @@
+'''
+created on may 21, 2019
+
+@author Emmanuel Uhegbu
+'''
 import sys
 import random
 import string_database
@@ -23,6 +28,8 @@ class guess():
     total_bad_guesses = 0
     user_word = ["-", "-", "-", "-"]
     status = "Gave up"
+    correct_word = []
+    ui_rep = []
 
     letter_freq = {'a': 8.17, 'b': 1.49, 'c': 2.78, 'd': 4.25, 'e': 12.70,
                    'f': 2.23, 'g': 2.02, 'h': 6.09, 'i': 6.97, 'j': 0.15,
@@ -39,7 +46,7 @@ class guess():
         :param menu():                  Displays the game menu.
         :param select_random_string():  Retrieves a random word to be guessed
                                         by the user from a 'string_database' object
-        :param choose_option():         Handles the game navigation with letters, 
+        :param choose_option():         Handles the game navigation with letters,
                                         g = guess, t = tell me, l = letter and q = quit
         :param correct_word:            list to hold the result from select_random_string function.
         return:                         returns nothing
@@ -48,23 +55,25 @@ class guess():
         self.menu()
         self.select_random_string()
         self.choose_option()
-        self.correct_word = []
+        # self.correct_word = []
 
     def menu(self):
         """
         Game menu to print the letters guessesed by the user
         and game navigation options
         """
-        print("\nCurrent Guess: " + "".join(self.user_word) + "\n")
+        print("\nCurrent Guess: " + "".join(self.ui_rep) + "\n")
         print("g = guess, t = tell me, l for a letter, and q to quit")
 
     def select_random_string(self):
         """
-        Method to select a random word from a 'string_database' object 
+        Method to select a random word from a 'string_database' object
         and stores the value in a global variable.
         """
         self.correct_word = list(string_database.get_db().get_word(
             random.randint(0, 4029)))
+        #   word test below
+        #   self.correct_word = list("abed")
 
     def choose_option(self):
         """
@@ -132,7 +141,7 @@ class guess():
             for x in range(len(self.correct_word)):
                 if self.correct_word[x] == user_guess:
                     self.user_word[x] = user_guess
-
+            self.user_word = self.ui_rep
             self.calc_score()
 
             if self.correct_word == self.user_word:
@@ -238,7 +247,7 @@ class guess():
         reinitialized for a new game object.
         """
 
-        self.user_word = ["-", "-", "-", "-"]
+        #self.user_word = ["-", "-", "-", "-"]
         self.total_score = 0
         self.total_letter_guesses = 0
         self.total_bad_guesses = 0
@@ -292,7 +301,8 @@ def end_game():
     sys.exit()
 
 
-main()
+if __name__ == "__main__":
+    main()
 
 
 # NOTES:

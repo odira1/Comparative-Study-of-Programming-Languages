@@ -1,4 +1,8 @@
+'''
+created on may 21, 2019
 
+@author Emmanuel Uhegbu
+'''
 class game():
     """
     Maintains all necessary information about a specific game.

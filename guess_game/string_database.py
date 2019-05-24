@@ -1,3 +1,8 @@
+'''
+created on may 21, 2019
+
+@author Emmanuel Uhegbu
+'''
 class string_database:
     """
     Encapsulates  a method required to create list from text File.
