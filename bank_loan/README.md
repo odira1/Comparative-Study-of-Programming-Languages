@@ -1,4 +1,4 @@
-<b> Banking Simulation - Exploring Erlang's concurrency model.
+<b> Banking Simulation - Exploring Erlang's concurrency model. </b>
 
 Reads a set of banks and customers for the purpose of completing loans.
 Each Customer and Banks runs as an indivisual Erlang Process. 
