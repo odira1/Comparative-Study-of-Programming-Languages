@@ -12,3 +12,9 @@ The objective in this course is to examine the constructs and features that defi
   Functional languages
 
 We try develop a deeper understanding and appreciation for the advantages and disadvantages of the core features of computer programming languages.
+
+# Projects
+
+- <b> Python <\b>  - Guess game with OOP concepts.
+- <b> Clojure<\b>  - Simple Maze Solver with recursion.
+- <b> Erlang <\b>  - Bank loan in Erlang and Java with concurrency and networking.
