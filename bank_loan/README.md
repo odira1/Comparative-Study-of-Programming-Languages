@@ -5,7 +5,7 @@
 <li> Customers request loans to banks until their goals are reached. </li>
 <li> Banks issue and deny loans as per the funds available.</li> <br/>
 
-prerequisites: Installation of Erlang and updating the environment variable. 
+Prerequisites: Installation of Erlang and updating the environment variable. 
 
 Instructions to run the project:
 
