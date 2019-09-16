@@ -15,6 +15,6 @@ We try develop a deeper understanding and appreciation for the advantages and di
 
 # Projects
 
-- <b> Python <\b>  - Guess game with OOP concepts.
-- <b> Clojure<\b>  - Simple Maze Solver with recursion.
-- <b> Erlang <\b>  - Bank loan in Erlang and Java with concurrency and networking.
+- <b> Python </b>  - Guess game with OOP concepts.
+- <b> Clojure</b>  - Simple Maze Solver with recursion.
+- <b> Erlang </b>  - Bank loan in Erlang and Java with concurrency and networking.
