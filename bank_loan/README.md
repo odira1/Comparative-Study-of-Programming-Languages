@@ -1,9 +1,9 @@
 <b> Banking Simulation - Exploring Erlang's concurrency model. </b>
 
-Reads a set of banks and customers for the purpose of completing loans.
-Each Customer and Banks runs as an indivisual Erlang Process. 
-Customers request loans to bank as until their goal is fulfilled. 
-Banks issues and denies loans as per the funds available.
+<li> Reads a set of banks and customers for the purpose of completing loans. </li>
+<li> Each Customer and Banks runs as indivisual erlang processes. </li>
+<li> Customers request loans to banks until their goals are reached. </li>
+<li> Banks issue and deny loans as per the funds available.</li> <br/>
 
 prerequisites: Installation of Erlang and updating the environment variable. 
 
